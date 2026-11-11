@@ -1596,7 +1596,34 @@ def india_filters():
 
           return india_registry_service.get_geographic_filters()
 
+# ==================================================
+# INDIA GEOGRAPHIC ENRICHMENT
+# ==================================================
 
+@app.post("/api/india/enrich-geography")
+def enrich_india_geography(
+    limit: int = Query(5, ge=1, le=10)
+):
+    """
+    Enrich missing Indian station geography
+    using OpenStreetMap Nominatim.
+    """
+    try:
+        return india_registry_service.enrich_missing_geography(
+            limit=limit
+        )
+
+    except ValueError as error:
+        raise HTTPException(
+            status_code=400,
+            detail=str(error)
+        )
+
+    except Exception:
+        raise HTTPException(
+            status_code=500,
+            detail="Geographic enrichment failed."
+        )
 
 
 
