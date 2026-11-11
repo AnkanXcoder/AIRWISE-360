@@ -1,4 +1,8 @@
 import os
+import gzip
+import shutil
+import urllib.request
+from pathlib import Path
 from datetime import date, datetime, timezone
 from fastapi import FastAPI, HTTPException, Query
 from fastapi.middleware.cors import CORSMiddleware
@@ -73,7 +77,65 @@ VALID_POLLUTANTS = {
 # ==================================================
 @app.on_event("startup")
 def startup():
-          initialize_database()
+    initialize_database()
+
+    # Download the district boundary dataset when it is absent.
+    # Render Free instances have ephemeral filesystems, so this runs
+    # again after a restart/redeploy if the file has been removed.
+    boundary_dir = Path("data") / "boundaries"
+    boundary_path = boundary_dir / "district_nwic.GeoJSON"
+    compressed_path = boundary_dir / "district_nwic.GeoJSON.gz"
+    download_part = boundary_dir / "district_nwic.GeoJSON.gz.part"
+
+    if boundary_path.is_file() and boundary_path.stat().st_size > 0:
+        print("India district boundary dataset already exists.")
+        return
+
+    boundary_dir.mkdir(parents=True, exist_ok=True)
+    dataset_url = os.getenv(
+        "AIRWISE_BOUNDARY_DATASET_URL",
+        "https://github.com/AnkanXcoder/AIRWISE-360/releases/download/"
+        "v1.0-boundaries/district_nwic.GeoJSON.gz",
+    )
+
+    try:
+        print("Downloading India district boundary dataset...")
+        request = urllib.request.Request(
+            dataset_url,
+            headers={"User-Agent": "AIRWISE-360/1.2"},
+        )
+        with urllib.request.urlopen(request, timeout=240) as response:
+            with open(download_part, "wb") as output_file:
+                shutil.copyfileobj(response, output_file)
+
+        # Validate the gzip stream before extracting it.
+        with gzip.open(download_part, "rb") as compressed_file:
+            with open(boundary_path.with_suffix(".GeoJSON.tmp"), "wb") as output_file:
+                shutil.copyfileobj(compressed_file, output_file)
+
+        extracted_temp = boundary_path.with_suffix(".GeoJSON.tmp")
+        if not extracted_temp.is_file() or extracted_temp.stat().st_size == 0:
+            raise RuntimeError("Downloaded boundary dataset is empty.")
+
+        os.replace(extracted_temp, boundary_path)
+        os.replace(download_part, compressed_path)
+        print(
+            "India district boundary dataset ready:",
+            boundary_path.stat().st_size,
+            "bytes",
+        )
+    except Exception as error:
+        for temporary_path in (
+            download_part,
+            boundary_path.with_suffix(".GeoJSON.tmp"),
+        ):
+            try:
+                temporary_path.unlink(missing_ok=True)
+            except OSError:
+                pass
+        print(f"WARNING: India boundary dataset download failed: {error}")
+        # Keep the API online; the enrichment endpoint will report that
+        # the boundary file is unavailable until a later restart/retry.
 # ==================================================
 # HOME
 # ==================================================
