@@ -7,6 +7,11 @@ from pathlib import Path
 
 import requests
 
+from pyproj import CRS, Transformer
+from shapely.geometry import Point, shape
+from shapely.ops import transform as transform_geometry
+from shapely.strtree import STRtree
+
 
 DB_PATH = Path("data/airwise.db")
 
@@ -18,6 +23,12 @@ GEOCODING_TIMEOUT = 15
 # Keep batches small when using the public Nominatim service.
 MAX_GEOCODING_BATCH = 10
 GEOCODING_REQUEST_INTERVAL = 1.1
+
+# Local administrative boundary dataset.
+BOUNDARY_PATH = Path("data/boundaries/district_nwic.GeoJSON")
+BOUNDARY_SOURCE = "NWIC District Boundary GeoJSON"
+BOUNDARY_SOURCE_CRS = "EPSG:7755"
+STATION_CRS = "EPSG:4326"
 
 
 class IndiaRegistryService:
@@ -1111,6 +1122,240 @@ class IndiaRegistryService:
             "failed": failed,
             "remaining_locations": remaining,
             "geographic_source": "OpenStreetMap Nominatim"
+        }
+
+
+    # --------------------------------------------------
+    # LOCAL DISTRICT-BOUNDARY ENRICHMENT
+    # --------------------------------------------------
+
+    def _load_india_district_boundaries(self, boundary_path=None):
+        """
+        Load district polygons and transform them to WGS84.
+
+        Station coordinates are stored as latitude/longitude (EPSG:4326).
+        GeoJSON coordinates are transformed from the dataset's declared
+        CRS (EPSG:7755) before spatial matching.
+        """
+        path = Path(boundary_path or BOUNDARY_PATH)
+
+        if not path.is_file():
+            raise FileNotFoundError(
+                f"India district boundary file not found: {path}"
+            )
+
+        with path.open("r", encoding="utf-8") as file:
+            document = json.load(file)
+
+        features = document.get("features")
+        if not isinstance(features, list) or not features:
+            raise ValueError("Boundary GeoJSON contains no features.")
+
+        source_crs = BOUNDARY_SOURCE_CRS
+        declared_crs = document.get("crs")
+        if isinstance(declared_crs, dict):
+            properties = declared_crs.get("properties") or {}
+            declared_name = properties.get("name")
+            if declared_name:
+                # GeoJSON from this source declares EPSG:7755.
+                source_crs = CRS.from_user_input(declared_name)
+
+        transformer = Transformer.from_crs(
+            source_crs,
+            STATION_CRS,
+            always_xy=True
+        )
+
+        geometries = []
+        metadata = []
+
+        for feature in features:
+            properties = feature.get("properties") or {}
+            geometry_data = feature.get("geometry")
+
+            district = self._clean_text(properties.get("district"))
+            state = self._clean_text(
+                properties.get("state_name") or properties.get("state")
+            )
+
+            if not district or not state or not geometry_data:
+                continue
+
+            try:
+                geometry = shape(geometry_data)
+                geometry = transform_geometry(
+                    transformer.transform,
+                    geometry
+                )
+
+                if geometry.is_empty:
+                    continue
+
+                if not geometry.is_valid:
+                    geometry = geometry.buffer(0)
+
+                if geometry.is_empty:
+                    continue
+
+                geometries.append(geometry)
+                metadata.append({
+                    "district": district,
+                    "state": state,
+                    "district_code": self._clean_text(
+                        properties.get("dtcode")
+                    ),
+                    "state_code": self._clean_text(
+                        properties.get("stcode")
+                    )
+                })
+
+            except Exception:
+                # Skip malformed boundary features without stopping the batch.
+                continue
+
+        if not geometries:
+            raise ValueError(
+                "No usable district polygons were found in the boundary file."
+            )
+
+        return geometries, metadata
+
+    def enrich_from_boundaries(
+        self,
+        limit=1000,
+        boundary_path=None
+    ):
+        """
+        Assign district and state to stations by point-in-polygon matching.
+
+        This uses the local NWIC district GeoJSON file. It does not make
+        reverse-geocoding requests and does not invent city names.
+        Existing non-empty city, district and state values are preserved.
+        """
+        if not 1 <= limit <= 10000:
+            raise ValueError("Limit must be between 1 and 10000.")
+
+        self.create_table()
+
+        geometries, metadata = self._load_india_district_boundaries(
+            boundary_path
+        )
+        spatial_index = STRtree(geometries)
+
+        with sqlite3.connect(self.db_path) as conn:
+            conn.row_factory = sqlite3.Row
+            rows = conn.execute("""
+                SELECT
+                    id,
+                    latitude,
+                    longitude,
+                    city,
+                    district,
+                    state
+                FROM india_station_registry
+                WHERE latitude IS NOT NULL
+                  AND longitude IS NOT NULL
+                  AND latitude BETWEEN 5 AND 37.5
+                  AND longitude BETWEEN 67 AND 98.5
+                  AND (
+                      district IS NULL OR TRIM(district) = ''
+                      OR state IS NULL OR TRIM(state) = ''
+                  )
+                ORDER BY id
+                LIMIT ?
+            """, (limit,)).fetchall()
+
+        processed = 0
+        matched = 0
+        unmatched = 0
+        updated = 0
+        now = self._now_utc()
+
+        with sqlite3.connect(self.db_path) as conn:
+            for station in rows:
+                processed += 1
+
+                latitude = float(station["latitude"])
+                longitude = float(station["longitude"])
+                point = Point(longitude, latitude)
+
+                candidate_indices = spatial_index.query(point)
+                match_index = None
+
+                for candidate_index in candidate_indices:
+                    index = int(candidate_index)
+                    if geometries[index].covers(point):
+                        match_index = index
+                        break
+
+                if match_index is None:
+                    unmatched += 1
+                    continue
+
+                matched += 1
+                boundary = metadata[match_index]
+
+                # Preserve all existing non-empty administrative values.
+                district = (
+                    self._clean_text(station["district"])
+                    or boundary["district"]
+                )
+                state = (
+                    self._clean_text(station["state"])
+                    or boundary["state"]
+                )
+
+                cursor = conn.execute("""
+                    UPDATE india_station_registry
+                    SET
+                        district = ?,
+                        state = ?,
+                        geographic_source = ?,
+                        geographic_enriched_at = ?
+                    WHERE id = ?
+                """, (
+                    district,
+                    state,
+                    BOUNDARY_SOURCE,
+                    now,
+                    station["id"]
+                ))
+
+                if cursor.rowcount:
+                    updated += 1
+
+            conn.commit()
+
+        with sqlite3.connect(self.db_path) as conn:
+            remaining = conn.execute("""
+                SELECT COUNT(*)
+                FROM india_station_registry
+                WHERE latitude IS NOT NULL
+                  AND longitude IS NOT NULL
+                  AND latitude BETWEEN 5 AND 37.5
+                  AND longitude BETWEEN 67 AND 98.5
+                  AND (
+                      district IS NULL OR TRIM(district) = ''
+                      OR state IS NULL OR TRIM(state) = ''
+                  )
+            """).fetchone()[0]
+
+        return {
+            "status": "success",
+            "boundary_source": BOUNDARY_SOURCE,
+            "boundary_crs": BOUNDARY_SOURCE_CRS,
+            "station_crs": STATION_CRS,
+            "boundary_features_loaded": len(geometries),
+            "requested_limit": limit,
+            "processed": processed,
+            "matched": matched,
+            "unmatched": unmatched,
+            "updated": updated,
+            "remaining_locations": remaining,
+            "city_policy": (
+                "City is not inferred from district boundaries; "
+                "existing city values are preserved."
+            )
         }
 
     # --------------------------------------------------
