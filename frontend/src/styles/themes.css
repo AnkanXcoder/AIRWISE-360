@@ -1,0 +1,63 @@
+
+/* AIRWISE 360° DESIGN SYSTEM */
+
+/* LIGHT THEME */
+:root,
+[data-theme="light"] {
+  color-scheme: light;
+
+  --primary: #1769E0;
+  --primary-hover: #1054B8;
+  --primary-light: #EAF2FF;
+
+  --background: #F5F7FA;
+  --surface: #FFFFFF;
+  --surface-secondary: #F8FAFC;
+
+  --text-primary: #172B4D;
+  --text-secondary: #64748B;
+  --text-muted: #94A3B8;
+
+  --border: #E2E8F0;
+  --success: #168653;
+  --warning: #D97706;
+  --danger: #DC3545;
+
+  --sidebar-width: 250px;
+  --header-height: 72px;
+
+  --card-radius: 12px;
+  --button-radius: 8px;
+
+  --shadow-card: 0 2px 8px rgba(15, 23, 42, 0.04);
+}
+
+/* DARK THEME */
+[data-theme="dark"] {
+  color-scheme: dark;
+
+  --primary: #60A5FA;
+  --primary-hover: #93C5FD;
+  --primary-light: #1E3A5F;
+
+  --background: #000000;
+  --surface: #0A0A0A;
+  --surface-secondary: #111111;
+
+  --text-primary: #F1F5F9;
+  --text-secondary: #B0BDCC;
+  --text-muted: #8293A8;
+
+  --border: #292929;
+  --success: #4ADE80;
+  --warning: #FBBF24;
+  --danger: #FB7185;
+
+  --sidebar-width: 250px;
+  --header-height: 72px;
+
+  --card-radius: 12px;
+  --button-radius: 8px;
+
+  --shadow-card: 0 2px 8px rgba(0, 0, 0, 0.15);
+}

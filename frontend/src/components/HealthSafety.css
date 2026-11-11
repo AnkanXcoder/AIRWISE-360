@@ -1,0 +1,27 @@
+.health-safety-page{display:flex;flex-direction:column;gap:21px;color:var(--text-primary,#f4f7fb)}
+.health-header,.health-section-title{display:flex;align-items:center;justify-content:space-between;gap:16px}
+.health-eyebrow{font-size:11px;font-weight:800;letter-spacing:1.1px;color:#60a5fa}
+.health-header h2{margin:7px 0;font-size:28px}.health-header p,.health-section-title p{margin:5px 0 0;color:var(--text-secondary,#aab9d0)}
+.health-refresh,.health-apply{display:flex;align-items:center;justify-content:center;gap:8px;border:0;border-radius:9px;padding:12px 15px;background:#2563eb;color:#fff;font-weight:700;cursor:pointer}
+.health-refresh:disabled,.health-apply:disabled{opacity:.6;cursor:wait}
+.health-status-card,.health-preferences,.health-guidance-section,.health-integrity{border:1px solid var(--border-color,#2b3b52);border-radius:14px;background:var(--card-bg,#19283d)}
+.health-status-card{display:flex;align-items:center;gap:16px;padding:20px;border-color:rgba(245,158,11,.5);background:rgba(245,158,11,.07)}
+.health-status-icon{display:grid;place-items:center;width:48px;height:48px;flex-shrink:0;border-radius:12px;background:rgba(245,158,11,.13);color:#f59e0b}
+.health-status-content{flex:1}.health-status-label{font-size:12px;color:var(--text-secondary,#aab9d0)}.health-status-content h3{margin:5px 0;font-size:21px}.health-status-content p{margin:0;color:var(--text-secondary,#aab9d0);font-size:13px}
+.health-status-badge{padding:7px 10px;border-radius:20px;background:rgba(245,158,11,.14);color:#fbbf24;font-size:11px;font-weight:800}
+.health-preferences,.health-guidance-section{padding:21px}.health-section-title{margin-bottom:17px}.health-section-title h3{margin:0;font-size:19px}.health-section-title>svg{color:#60a5fa}
+.health-toggle-row{display:flex;align-items:center;justify-content:space-between;gap:16px;padding:15px 0;border-top:1px solid var(--border-color,#2b3b52);cursor:pointer}
+.health-toggle-row span{display:flex;flex-direction:column;gap:5px}.health-toggle-row strong{font-size:14px}.health-toggle-row small{color:var(--text-secondary,#aab9d0);font-size:12px;line-height:1.5}
+.health-toggle-row input{width:18px;height:18px;accent-color:#3b82f6;flex-shrink:0}.health-apply{margin-top:12px}
+.health-guidance-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}
+.health-guidance-card{display:grid;grid-template-columns:42px 1fr;gap:8px 12px;padding:17px;border:1px solid var(--border-color,#2b3b52);border-radius:12px;background:var(--surface-muted,#203149)}
+.health-card-icon{display:grid;place-items:center;width:40px;height:40px;border-radius:10px;background:rgba(59,130,246,.13);color:#60a5fa}
+.health-guidance-card h4{margin:1px 0 4px;font-size:15px}.health-card-description{margin:0;color:var(--text-secondary,#aab9d0);font-size:11px;line-height:1.45}
+.health-card-guidance{grid-column:1/-1;margin:7px 0 0;color:var(--text-primary,#e8eef8);font-size:13px;line-height:1.65}
+.health-integrity{display:flex;align-items:flex-start;gap:13px;padding:17px;border-color:rgba(59,130,246,.35)}.health-integrity>svg{flex-shrink:0;color:#60a5fa}.health-integrity strong{font-size:14px}.health-integrity p{margin:6px 0 0;color:var(--text-secondary,#aab9d0);font-size:12px;line-height:1.65}
+.health-disclaimer{margin:0;color:var(--text-secondary,#aab9d0);font-size:12px;line-height:1.6}
+.health-error{display:flex;align-items:center;gap:10px;padding:13px;border:1px solid rgba(239,68,68,.4);border-radius:10px;color:#fca5a5;background:rgba(239,68,68,.08);font-size:13px}.health-error button{margin-left:auto;border:0;border-radius:7px;padding:7px 10px;background:#7f1d1d;color:white;cursor:pointer}
+.health-loading{display:flex;align-items:center;gap:10px;padding:28px;color:var(--text-secondary,#aab9d0)}
+.health-spin{animation:health-spin 1s linear infinite}@keyframes health-spin{to{transform:rotate(360deg)}}
+@media(max-width:750px){.health-guidance-grid{grid-template-columns:1fr}.health-header{align-items:flex-start;flex-direction:column}.health-refresh{width:100%}}
+@media(max-width:480px){.health-status-card{align-items:flex-start;flex-wrap:wrap}.health-status-badge{margin-left:64px}.health-preferences,.health-guidance-section{padding:15px}}

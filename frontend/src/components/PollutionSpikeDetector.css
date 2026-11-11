@@ -1,0 +1,969 @@
+
+/* =========================================
+   AIRWISE 360 - POLLUTION SPIKE DETECTOR
+========================================= */
+
+.psd-page {
+  display: flex;
+  flex-direction: column;
+  gap: 22px;
+  color: var(--text-primary, #f4f7fb);
+}
+
+.psd-page-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 20px;
+}
+
+.psd-page-header h1 {
+  margin: 10px 0 8px;
+  font-size: clamp(26px, 3vw, 36px);
+}
+
+.psd-page-header p,
+.psd-section-heading p {
+  margin: 0;
+  color: var(--text-secondary, #aabbd2);
+  line-height: 1.6;
+}
+
+.psd-eyebrow {
+  color: #60a5fa;
+  font-size: 12px;
+  font-weight: 800;
+  letter-spacing: 1.1px;
+}
+
+.psd-primary-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 9px;
+  padding: 13px 17px;
+  border: 0;
+  border-radius: 10px;
+  background: #2563eb;
+  color: white;
+  font-weight: 700;
+  cursor: pointer;
+  white-space: nowrap;
+}
+
+.psd-primary-button:hover {
+  background: #1d4ed8;
+}
+
+.psd-primary-button:disabled {
+  opacity: .65;
+  cursor: wait;
+}
+
+/* =========================================
+   PANELS AND CONTROLS
+========================================= */
+
+.psd-panel,
+.psd-metric-card {
+  background: var(--card-bg, #192a40);
+  border: 1px solid var(--border-color, #293c55);
+  border-radius: 16px;
+}
+
+.psd-panel {
+  padding: 24px;
+}
+
+.psd-controls {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 18px;
+}
+
+.psd-controls label {
+  display: flex;
+  flex-direction: column;
+  gap: 9px;
+  font-weight: 650;
+}
+
+.psd-controls input,
+.psd-controls select {
+  width: 100%;
+  min-width: 0;
+  padding: 13px 14px;
+  border: 1px solid var(--border-color, #344861);
+  border-radius: 9px;
+  background: var(--input-bg, #20334b);
+  color: inherit;
+  font: inherit;
+}
+
+.psd-source-strip {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: 14px;
+  padding: 17px 20px;
+  border: 1px solid var(--border-color, #293c55);
+  border-radius: 13px;
+  background: var(--card-bg, #192a40);
+  color: var(--text-secondary, #b5c6dd);
+}
+
+.psd-source-strip span {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.psd-source-strip svg,
+.psd-section-heading > svg {
+  color: #60a5fa;
+  flex: 0 0 auto;
+}
+
+/* =========================================
+   METRIC CARDS
+========================================= */
+
+.psd-metrics-grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 16px;
+}
+
+.psd-metric-card {
+  padding: 20px;
+  min-width: 0;
+}
+
+.psd-metric-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  color: var(--text-secondary, #b5c6dd);
+}
+
+.psd-metric-top svg {
+  color: #60a5fa;
+}
+
+.psd-metric-card > strong {
+  display: block;
+  margin: 18px 0 7px;
+  font-size: 30px;
+}
+
+.psd-metric-card small {
+  color: var(--text-secondary, #aabbd2);
+}
+
+/* =========================================
+   SECTION HEADINGS
+========================================= */
+
+.psd-section-heading {
+  display: flex;
+  justify-content: space-between;
+  gap: 16px;
+  margin-bottom: 22px;
+}
+
+.psd-section-heading h2 {
+  margin: 0 0 7px;
+  font-size: 22px;
+}
+
+/* =========================================
+   POLLUTION EVENT INTELLIGENCE
+========================================= */
+
+.psd-event-summary-grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 14px;
+  margin-bottom: 22px;
+}
+
+.psd-event-summary-card {
+  min-width: 0;
+  padding: 17px;
+  border: 1px solid var(--border-color, #30435c);
+  border-radius: 12px;
+  background: var(--nested-card-bg, #20334b);
+}
+
+.psd-event-summary-card span {
+  display: block;
+  color: var(--text-secondary, #aabbd2);
+  font-size: 13px;
+}
+
+.psd-event-summary-card strong {
+  display: block;
+  margin-top: 10px;
+  font-size: 25px;
+  overflow-wrap: anywhere;
+}
+
+.psd-event-list {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.psd-event-card {
+  padding: 19px;
+  border: 1px solid var(--border-color, #30435c);
+  border-radius: 12px;
+  background: var(--nested-card-bg, #20334b);
+}
+
+.psd-event-heading {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 14px;
+  margin-bottom: 18px;
+}
+
+.psd-event-heading h3 {
+  margin: 5px 0 0;
+  font-size: 19px;
+}
+
+.psd-event-heading p {
+  margin: 5px 0 0;
+  color: var(--text-secondary, #aabbd2);
+  font-size: 13px;
+}
+
+.psd-event-status {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 7px 11px;
+  border-radius: 999px;
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: .4px;
+  white-space: nowrap;
+}
+
+.psd-event-status--active {
+  color: #fbbf24;
+  background: rgba(245, 158, 11, .14);
+  border: 1px solid rgba(245, 158, 11, .25);
+}
+
+.psd-event-status--resolved {
+  color: #34d399;
+  background: rgba(16, 185, 129, .13);
+  border: 1px solid rgba(16, 185, 129, .25);
+}
+
+.psd-event-status--unknown {
+  color: #93c5fd;
+  background: rgba(59, 130, 246, .13);
+  border: 1px solid rgba(59, 130, 246, .25);
+}
+
+.psd-event-metrics {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 13px;
+  margin-bottom: 17px;
+}
+
+.psd-event-metric {
+  padding: 13px;
+  border-radius: 9px;
+  background: var(--card-bg, #192a40);
+  border: 1px solid var(--border-color, #30435c);
+}
+
+.psd-event-metric span {
+  display: block;
+  color: var(--text-secondary, #aabbd2);
+  font-size: 12px;
+}
+
+.psd-event-metric strong {
+  display: block;
+  margin-top: 8px;
+  font-size: 19px;
+  overflow-wrap: anywhere;
+}
+
+.psd-event-timeline {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  margin-top: 16px;
+  padding: 5px 0;
+}
+
+.psd-event-timeline-item {
+  position: relative;
+  display: flex;
+  gap: 13px;
+  padding: 0 0 19px;
+}
+
+.psd-event-timeline-item:last-child {
+  padding-bottom: 0;
+}
+
+.psd-event-timeline-marker {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex: 0 0 27px;
+  width: 27px;
+  height: 27px;
+  border-radius: 50%;
+  background: rgba(59, 130, 246, .15);
+  color: #60a5fa;
+}
+
+.psd-event-timeline-item:not(:last-child)
+.psd-event-timeline-marker::after {
+  content: "";
+  position: absolute;
+  top: 27px;
+  left: 13px;
+  width: 2px;
+  height: 25px;
+  background: var(--border-color, #344861);
+}
+
+.psd-event-timeline-content {
+  min-width: 0;
+}
+
+.psd-event-timeline-content strong {
+  display: block;
+  font-size: 13px;
+}
+
+.psd-event-timeline-content span {
+  display: block;
+  margin-top: 4px;
+  color: var(--text-secondary, #aabbd2);
+  font-size: 12px;
+  overflow-wrap: anywhere;
+}
+
+.psd-event-foot {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px 20px;
+  margin-top: 17px;
+  padding-top: 14px;
+  border-top: 1px solid var(--border-color, #344861);
+  color: var(--text-secondary, #aabbd2);
+  font-size: 12px;
+}
+
+.psd-event-methodology {
+  margin-top: 18px;
+  padding: 15px;
+  border: 1px solid rgba(59, 130, 246, .3);
+  border-radius: 10px;
+  background: rgba(59, 130, 246, .07);
+}
+
+.psd-event-methodology strong {
+  display: block;
+  margin-bottom: 6px;
+  font-size: 13px;
+}
+
+.psd-event-methodology p {
+  margin: 0;
+  color: var(--text-secondary, #b5c6dd);
+  font-size: 13px;
+  line-height: 1.6;
+}
+
+/* =========================================
+   SENSOR ANALYSIS
+========================================= */
+
+.psd-sensor-list {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.psd-sensor-card {
+  padding: 19px;
+  border: 1px solid var(--border-color, #30435c);
+  border-radius: 12px;
+  background: var(--nested-card-bg, #20334b);
+}
+
+.psd-sensor-heading {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+}
+
+.psd-muted-label,
+.psd-sensor-stats span {
+  display: block;
+  color: var(--text-secondary, #aabbd2);
+  font-size: 13px;
+}
+
+.psd-sensor-heading h3 {
+  margin: 5px 0 0;
+  font-size: 20px;
+}
+
+.psd-status {
+  display: inline-flex;
+  align-items: center;
+  padding: 6px 10px;
+  border-radius: 999px;
+  font-size: 12px;
+  font-weight: 750;
+  text-transform: capitalize;
+}
+
+.psd-status--warning {
+  color: #fbbf24;
+  background: rgba(245, 158, 11, .13);
+}
+
+.psd-status--success {
+  color: #34d399;
+  background: rgba(16, 185, 129, .13);
+}
+
+.psd-status--neutral {
+  color: #93c5fd;
+  background: rgba(59, 130, 246, .13);
+}
+
+.psd-sensor-stats {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 14px;
+  margin: 20px 0 15px;
+}
+
+.psd-sensor-stats strong {
+  display: block;
+  margin-top: 7px;
+  overflow-wrap: anywhere;
+}
+
+.psd-date-range {
+  display: flex;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 8px;
+  padding-top: 13px;
+  border-top: 1px solid var(--border-color, #344861);
+  color: var(--text-secondary, #aabbd2);
+  font-size: 13px;
+}
+
+/* =========================================
+   ANOMALY SUMMARY
+========================================= */
+
+.psd-anomaly-summary-heading {
+  margin-top: 21px;
+  margin-bottom: 13px;
+}
+
+.psd-anomaly-summary-heading h4 {
+  margin: 0 0 5px;
+  font-size: 16px;
+}
+
+.psd-anomaly-summary-heading p {
+  margin: 0;
+  color: var(--text-secondary, #aabbd2);
+  font-size: 12px;
+  line-height: 1.5;
+}
+
+.psd-anomaly-summary-grid {
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  gap: 10px;
+}
+
+.psd-anomaly-summary-card {
+  min-width: 0;
+  padding: 13px;
+  border: 1px solid var(--border-color, #344861);
+  border-radius: 9px;
+  background: var(--card-bg, #192a40);
+}
+
+.psd-anomaly-summary-card span {
+  display: block;
+  color: var(--text-secondary, #aabbd2);
+  font-size: 11px;
+  line-height: 1.4;
+}
+
+.psd-anomaly-summary-card strong {
+  display: block;
+  margin-top: 9px;
+  font-size: 18px;
+  overflow-wrap: anywhere;
+}
+
+.psd-anomaly-summary-card .psd-anomaly-summary-date {
+  font-size: 12px;
+  line-height: 1.5;
+}
+
+/* =========================================
+   ANOMALY LIST
+========================================= */
+
+.psd-anomaly-list {
+  margin-top: 18px;
+  overflow: hidden;
+  border: 1px solid var(--border-color, #344861);
+  border-radius: 10px;
+}
+
+.psd-anomaly-header {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 13px 15px;
+  background: var(--card-bg, #192a40);
+  border-bottom: 1px solid var(--border-color, #344861);
+}
+
+.psd-anomaly-header strong {
+  font-size: 13px;
+}
+
+.psd-anomaly-header span {
+  color: var(--text-secondary, #aabbd2);
+  font-size: 12px;
+}
+
+.psd-anomaly-row {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto auto;
+  align-items: center;
+  gap: 15px;
+  padding: 13px 15px;
+  border-bottom: 1px solid var(--border-color, #344861);
+}
+
+.psd-anomaly-row:last-child {
+  border-bottom: 0;
+}
+
+.psd-anomaly-info {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  min-width: 0;
+}
+
+.psd-anomaly-time {
+  color: var(--text-secondary, #aabbd2);
+  font-size: 11px;
+}
+
+.psd-anomaly-type {
+  font-size: 13px;
+  font-weight: 650;
+}
+
+.psd-anomaly-value {
+  display: flex;
+  align-items: baseline;
+  gap: 5px;
+}
+
+.psd-anomaly-value strong {
+  font-size: 15px;
+}
+
+.psd-anomaly-value span {
+  color: var(--text-secondary, #aabbd2);
+  font-size: 11px;
+}
+
+.psd-anomaly-badge {
+  padding: 5px 9px;
+  border-radius: 999px;
+  font-size: 10px;
+  font-weight: 800;
+}
+
+.psd-anomaly-badge--spike {
+  color: #fbbf24;
+  background: rgba(245, 158, 11, .13);
+}
+
+.psd-anomaly-badge--drop {
+  color: #93c5fd;
+  background: rgba(59, 130, 246, .13);
+}
+
+.psd-anomaly-badge--other {
+  color: #c4b5fd;
+  background: rgba(139, 92, 246, .13);
+}
+
+/* =========================================
+   FLATLINE AND DATE INFORMATION
+========================================= */
+
+.psd-inline-note {
+  margin: 14px 0 0;
+  color: var(--text-secondary, #b5c6dd);
+  line-height: 1.55;
+}
+
+.psd-flatline-row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 18px;
+  margin-top: 16px;
+  padding-top: 14px;
+  border-top: 1px solid var(--border-color, #344861);
+  color: var(--text-secondary, #b5c6dd);
+}
+
+.psd-flatline-row strong {
+  color: var(--text-primary, #f4f7fb);
+}
+
+.psd-detected,
+.psd-not-detected {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.psd-detected {
+  color: #fbbf24;
+}
+
+.psd-not-detected {
+  color: #34d399;
+}
+
+/* =========================================
+   ALERTS AND INTEGRITY
+========================================= */
+
+.psd-alert {
+  display: flex;
+  align-items: flex-start;
+  gap: 13px;
+  padding: 17px 19px;
+  border-radius: 12px;
+}
+
+.psd-alert strong {
+  display: block;
+  margin-bottom: 5px;
+}
+
+.psd-alert p {
+  margin: 0;
+  line-height: 1.55;
+}
+
+.psd-alert--warning {
+  border: 1px solid #b7791f;
+  background: rgba(180, 120, 20, .10);
+  color: var(--text-primary, #f4f7fb);
+}
+
+.psd-alert--warning > svg {
+  color: #fbbf24;
+  flex: 0 0 auto;
+}
+
+.psd-alert--error {
+  border: 1px solid #dc6464;
+  background: rgba(220, 80, 80, .10);
+}
+
+.psd-alert--error > svg {
+  color: #f87171;
+  flex: 0 0 auto;
+}
+
+.psd-integrity-note {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  padding: 18px 20px;
+  border: 1px solid rgba(59, 130, 246, .4);
+  border-radius: 12px;
+  background: rgba(59, 130, 246, .08);
+}
+
+.psd-integrity-note > svg {
+  color: #60a5fa;
+  flex: 0 0 auto;
+}
+
+.psd-integrity-note p {
+  margin: 6px 0 0;
+  color: var(--text-secondary, #b5c6dd);
+  line-height: 1.6;
+}
+
+/* =========================================
+   EMPTY AND LOADING STATES
+========================================= */
+
+.psd-empty,
+.psd-loading {
+  padding: 22px;
+  color: var(--text-secondary, #b5c6dd);
+}
+
+.psd-spin {
+  animation: psd-rotate 1s linear infinite;
+}
+
+@keyframes psd-rotate {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* =========================================
+   RESPONSIVE DESIGN
+========================================= */
+
+@media (max-width: 1100px) {
+  .psd-event-summary-grid,
+  .psd-event-metrics {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .psd-anomaly-summary-grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 1000px) {
+  .psd-metrics-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 700px) {
+  .psd-page-header {
+    flex-direction: column;
+  }
+
+  .psd-controls {
+    grid-template-columns: 1fr;
+  }
+
+  .psd-sensor-stats {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .psd-panel {
+    padding: 17px;
+  }
+
+  .psd-event-heading {
+    flex-direction: column;
+  }
+
+  .psd-event-summary-grid,
+  .psd-event-metrics {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .psd-anomaly-summary-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .psd-anomaly-row {
+    grid-template-columns: minmax(0, 1fr) auto;
+  }
+
+  .psd-anomaly-badge {
+    grid-column: 1 / -1;
+    justify-self: start;
+  }
+
+  .psd-metrics-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 420px) {
+  .psd-metrics-grid,
+  .psd-event-summary-grid,
+  .psd-event-metrics,
+  .psd-anomaly-summary-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .psd-anomaly-header {
+    flex-direction: column;
+  }
+}
+
+
+
+/* =========================================
+   EVENT INTELLIGENCE - MATCH CURRENT JSX
+========================================= */
+
+/* Four event summary cards */
+.psd-event-summary {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 16px;
+  margin-bottom: 20px;
+}
+
+.psd-event-summary .psd-metric-card {
+  min-width: 0;
+}
+
+/* Station and data metadata */
+.psd-event-meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px 24px;
+  padding: 15px 17px;
+  margin-bottom: 20px;
+  border: 1px solid var(--border-color, #344861);
+  border-radius: 11px;
+  background: var(--nested-card-bg, #20334b);
+  color: var(--text-secondary, #b5c6dd);
+  font-size: 13px;
+}
+
+.psd-event-meta strong {
+  color: var(--text-primary, #f4f7fb);
+}
+
+/* Missing data warning */
+.psd-event-gap {
+  margin-bottom: 18px;
+}
+
+/* Four event statistics */
+.psd-event-stats {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 12px;
+  margin: 18px 0;
+}
+
+.psd-event-stats > div {
+  min-width: 0;
+  padding: 14px;
+  border: 1px solid var(--border-color, #344861);
+  border-radius: 10px;
+  background: var(--card-bg, #192a40);
+}
+
+.psd-event-stats > div > span {
+  display: block;
+  margin-bottom: 8px;
+  color: var(--text-secondary, #aabbd2);
+  font-size: 12px;
+}
+
+.psd-event-stats > div > strong {
+  display: block;
+  font-size: 17px;
+  line-height: 1.5;
+  overflow-wrap: anywhere;
+}
+
+/* Event timeline */
+.psd-event-timeline {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
+  margin-top: 17px;
+}
+
+.psd-event-timeline p {
+  min-width: 0;
+  margin: 0;
+  padding: 12px;
+  border-radius: 9px;
+  background: var(--card-bg, #192a40);
+  color: var(--text-primary, #f4f7fb);
+  font-size: 13px;
+  line-height: 1.6;
+  overflow-wrap: anywhere;
+}
+
+.psd-event-timeline p span {
+  display: block;
+  margin-bottom: 4px;
+  color: var(--text-secondary, #aabbd2);
+  font-size: 12px;
+}
+
+/* Event footer */
+.psd-event-foot {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px 22px;
+  margin-top: 18px;
+  padding-top: 15px;
+  border-top: 1px solid var(--border-color, #344861);
+  color: var(--text-secondary, #aabbd2);
+  font-size: 12px;
+}
+
+/* Active status */
+.psd-status--active {
+  color: #fbbf24;
+  background: rgba(245, 158, 11, .14);
+}
+
+/* Responsive layout */
+@media (max-width: 1000px) {
+  .psd-event-summary,
+  .psd-event-stats {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 650px) {
+  .psd-event-summary,
+  .psd-event-stats,
+  .psd-event-timeline {
+    grid-template-columns: 1fr;
+  }
+
+  .psd-event-meta {
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .psd-event-card {
+    padding: 15px;
+  }
+}

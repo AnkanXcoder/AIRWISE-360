@@ -1,0 +1,609 @@
+
+/* =========================================
+   AIRWISE 360° - DIWALI IMPACT INTELLIGENCE
+   Complete responsive stylesheet
+========================================= */
+
+/* Main page */
+
+.diwali-page {
+  display: flex;
+  flex-direction: column;
+  gap: 22px;
+  min-width: 0;
+  width: 100%;
+  color: var(--text-primary, #f4f7fb);
+}
+
+.diwali-page * {
+  box-sizing: border-box;
+}
+
+/* Header */
+
+.diwali-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 20px;
+  min-width: 0;
+}
+
+.diwali-header h1 {
+  font-size: clamp(27px, 3vw, 36px);
+  margin: 9px 0;
+  overflow-wrap: anywhere;
+}
+
+.diwali-header p,
+.diwali-section-heading p {
+  margin: 0;
+  color: var(--text-secondary, #aabbd2);
+  line-height: 1.6;
+}
+
+.diwali-eyebrow {
+  font-size: 12px;
+  font-weight: 800;
+  letter-spacing: 1px;
+  color: #60a5fa;
+}
+
+/* Buttons */
+
+.diwali-refresh,
+.diwali-apply {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 9px;
+  padding: 13px 17px;
+  border: 0;
+  border-radius: 10px;
+  background: #2563eb;
+  color: #fff;
+  font-weight: 700;
+  cursor: pointer;
+  white-space: nowrap;
+}
+
+.diwali-refresh:disabled,
+.diwali-apply:disabled {
+  opacity: 0.6;
+  cursor: wait;
+}
+
+.diwali-spin {
+  animation: diwali-rotate 1s linear infinite;
+}
+
+@keyframes diwali-rotate {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* Panels */
+
+.diwali-panel,
+.diwali-summary-card {
+  background: var(--card-bg, #192a40);
+  border: 1px solid var(--border-color, #293c55);
+  border-radius: 16px;
+  min-width: 0;
+}
+
+.diwali-panel {
+  padding: 23px;
+}
+
+/* Date and city controls */
+
+.diwali-controls {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr auto;
+  align-items: end;
+  gap: 15px;
+  min-width: 0;
+}
+
+.diwali-controls label {
+  display: flex;
+  flex-direction: column;
+  gap: 9px;
+  min-width: 0;
+  font-weight: 650;
+}
+
+.diwali-controls label span {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+}
+
+.diwali-controls input,
+.diwali-controls select {
+  width: 100%;
+  min-width: 0;
+  padding: 12px;
+  border: 1px solid var(--border-color, #344861);
+  border-radius: 9px;
+  background: var(--input-bg, #20334b);
+  color: inherit;
+  font: inherit;
+}
+
+/* Source metadata */
+
+.diwali-source-strip {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: 13px;
+  min-width: 0;
+  padding: 17px 19px;
+  background: var(--card-bg, #192a40);
+  border: 1px solid var(--border-color, #293c55);
+  border-radius: 13px;
+  color: var(--text-secondary, #b5c6dd);
+}
+
+.diwali-source-strip span {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+
+.diwali-source-strip svg,
+.diwali-section-heading > svg {
+  color: #60a5fa;
+  flex-shrink: 0;
+}
+
+/* Summary cards */
+
+.diwali-summary-grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 15px;
+  min-width: 0;
+}
+
+.diwali-summary-card {
+  padding: 19px;
+  min-width: 0;
+}
+
+.diwali-summary-card span {
+  display: block;
+  color: var(--text-secondary, #b5c6dd);
+}
+
+.diwali-summary-card strong {
+  display: block;
+  margin: 14px 0 7px;
+  font-size: 27px;
+  overflow-wrap: anywhere;
+}
+
+.diwali-summary-card small {
+  color: var(--text-secondary, #aabbd2);
+}
+
+.diwali-summary-card .diwali-summary-status {
+  font-size: 20px;
+  text-transform: capitalize;
+}
+
+/* Alerts */
+
+.diwali-alert {
+  display: flex;
+  align-items: flex-start;
+  gap: 13px;
+  padding: 17px 19px;
+  border-radius: 12px;
+  min-width: 0;
+}
+
+.diwali-alert strong {
+  display: block;
+  margin-bottom: 5px;
+}
+
+.diwali-alert p {
+  margin: 0;
+  line-height: 1.55;
+  overflow-wrap: anywhere;
+}
+
+.diwali-alert--warning {
+  border: 1px solid #b7791f;
+  background: rgba(180, 120, 20, 0.1);
+}
+
+.diwali-alert--warning > svg {
+  color: #fbbf24;
+  flex: 0 0 auto;
+}
+
+.diwali-alert--error {
+  border: 1px solid #dc6464;
+  background: rgba(220, 80, 80, 0.1);
+}
+
+.diwali-alert--error > svg {
+  color: #f87171;
+  flex: 0 0 auto;
+}
+
+/* Section headings */
+
+.diwali-section-heading {
+  display: flex;
+  justify-content: space-between;
+  gap: 15px;
+  margin-bottom: 19px;
+  min-width: 0;
+}
+
+.diwali-section-heading h2 {
+  margin: 0 0 7px;
+  font-size: 22px;
+}
+
+/* Three-period comparison */
+
+.diwali-period-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 14px;
+  min-width: 0;
+}
+
+.diwali-period-card {
+  padding: 18px;
+  border: 1px solid var(--border-color, #30435c);
+  border-radius: 12px;
+  background: var(--nested-card-bg, #20334b);
+  min-width: 0;
+}
+
+.diwali-period-head {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 12px;
+}
+
+.diwali-period-head h3 {
+  margin: 0 0 5px;
+  font-size: 18px;
+}
+
+.diwali-period-head p {
+  margin: 0;
+  color: var(--text-secondary, #aabbd2);
+  font-size: 13px;
+}
+
+/* Coverage badges */
+
+.diwali-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 6px 9px;
+  border-radius: 999px;
+  font-size: 11px;
+  font-weight: 750;
+}
+
+.diwali-badge--good {
+  color: #34d399;
+  background: rgba(16, 185, 129, 0.13);
+}
+
+.diwali-badge--warning {
+  color: #fbbf24;
+  background: rgba(245, 158, 11, 0.13);
+}
+
+/* Period metrics */
+
+.diwali-period-metrics {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 13px;
+  margin: 20px 0;
+  min-width: 0;
+}
+
+.diwali-period-metrics > div {
+  min-width: 0;
+}
+
+.diwali-period-metrics span {
+  display: block;
+  color: var(--text-secondary, #aabbd2);
+  font-size: 12px;
+}
+
+.diwali-period-metrics strong {
+  display: block;
+  margin: 5px 0;
+  font-size: 20px;
+  overflow-wrap: anywhere;
+}
+
+.diwali-period-metrics small {
+  color: var(--text-secondary, #aabbd2);
+  font-size: 11px;
+}
+
+/* Coverage details */
+
+.diwali-coverage-line {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  padding-top: 13px;
+  border-top: 1px solid var(--border-color, #344861);
+  font-size: 12px;
+  color: var(--text-secondary, #aabbd2);
+  overflow-wrap: anywhere;
+}
+
+.diwali-coverage-line strong {
+  color: var(--text-primary, #f4f7fb);
+}
+
+.diwali-coverage-message,
+.diwali-explanation {
+  color: var(--text-secondary, #b5c6dd);
+  line-height: 1.6;
+}
+
+/* Period-to-period comparison */
+
+.diwali-comparison-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 14px;
+  min-width: 0;
+}
+
+.diwali-comparison-grid article {
+  padding: 18px;
+  border-radius: 12px;
+  background: var(--nested-card-bg, #20334b);
+  min-width: 0;
+}
+
+.diwali-comparison-grid span {
+  display: block;
+  color: var(--text-secondary, #b5c6dd);
+}
+
+.diwali-comparison-grid strong {
+  display: block;
+  margin-top: 12px;
+  font-size: 24px;
+  overflow-wrap: anywhere;
+}
+
+/* Methodology and data integrity */
+
+.diwali-integrity {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  padding: 18px 20px;
+  border: 1px solid rgba(59, 130, 246, 0.4);
+  border-radius: 12px;
+  background: rgba(59, 130, 246, 0.08);
+  min-width: 0;
+}
+
+.diwali-integrity > svg {
+  color: #60a5fa;
+  flex: 0 0 auto;
+}
+
+.diwali-integrity > div {
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+
+.diwali-integrity p {
+  margin: 7px 0;
+  color: var(--text-secondary, #b5c6dd);
+  line-height: 1.6;
+}
+
+.diwali-integrity small {
+  color: var(--text-secondary, #aabbd2);
+}
+
+/* Loading and unavailable states */
+
+.diwali-loading,
+.diwali-empty {
+  padding: 22px;
+  color: var(--text-secondary, #b5c6dd);
+}
+
+.diwali-empty {
+  display: flex;
+  align-items: flex-start;
+  gap: 13px;
+  padding: 20px;
+  border: 1px solid #b7791f;
+  border-radius: 12px;
+  background: rgba(180, 120, 20, 0.10);
+  color: var(--text-primary, #f4f7fb);
+  min-width: 0;
+}
+
+.diwali-empty > svg {
+  flex: 0 0 auto;
+  color: #fbbf24;
+}
+
+.diwali-empty strong {
+  display: block;
+  margin-bottom: 7px;
+}
+
+.diwali-empty p {
+  margin: 5px 0;
+  color: var(--text-secondary, #b5c6dd);
+  line-height: 1.6;
+}
+
+/* =========================================
+   TABLET RESPONSIVENESS
+========================================= */
+
+@media (max-width: 1050px) {
+  .diwali-summary-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .diwali-controls {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+/* =========================================
+   MOBILE RESPONSIVENESS
+========================================= */
+
+@media (max-width: 760px) {
+  .diwali-page {
+    gap: 18px;
+  }
+
+  .diwali-header {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 14px;
+  }
+
+  .diwali-header h1 {
+    font-size: 27px;
+  }
+
+  .diwali-refresh {
+    align-self: flex-start;
+  }
+
+  /* Stack all four summary cards */
+  .diwali-summary-grid {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 12px;
+  }
+
+  .diwali-summary-card {
+    padding: 17px;
+  }
+
+  /* Stack date and city controls */
+  .diwali-controls {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 14px;
+  }
+
+  .diwali-apply {
+    width: 100%;
+  }
+
+  /* Stack period cards */
+  .diwali-period-grid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  /* Stack comparison cards */
+  .diwali-comparison-grid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .diwali-panel {
+    padding: 16px;
+  }
+
+  /* Stack source metadata */
+  .diwali-source-strip {
+    flex-direction: column;
+    align-items: flex-start;
+    padding: 15px;
+  }
+
+  .diwali-source-strip span {
+    width: 100%;
+    align-items: flex-start;
+    overflow-wrap: anywhere;
+  }
+
+  .diwali-section-heading {
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .diwali-section-heading h2 {
+    font-size: 20px;
+  }
+
+  .diwali-integrity {
+    padding: 16px;
+  }
+}
+
+/* =========================================
+   SMALL MOBILE SCREENS
+========================================= */
+
+@media (max-width: 400px) {
+  .diwali-page {
+    gap: 15px;
+  }
+
+  .diwali-header h1 {
+    font-size: 24px;
+  }
+
+  .diwali-panel {
+    padding: 13px;
+  }
+
+  .diwali-summary-card {
+    padding: 15px;
+  }
+
+  .diwali-summary-card strong {
+    font-size: 24px;
+  }
+
+  .diwali-period-card {
+    padding: 15px;
+  }
+
+  .diwali-period-metrics {
+    gap: 10px;
+  }
+
+  .diwali-period-metrics strong {
+    font-size: 18px;
+  }
+
+  .diwali-comparison-grid article {
+    padding: 15px;
+  }
+
+  .diwali-integrity {
+    gap: 9px;
+    padding: 14px;
+  }
+}
