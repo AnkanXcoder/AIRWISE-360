@@ -38,6 +38,7 @@ class MLReadinessService:
                 "duplicate_timestamps": 0,
                 "invalid_values": 0,
                 "invalid_timestamps": 0,
+                "future_timestamps": 0,
             }
 
         df = pd.DataFrame(sensor_records)
