@@ -654,6 +654,14 @@ def check_ml_readiness(
     except HTTPException:
         raise
     except Exception:
+        import logging
+
+        logging.exception(
+            "ML readiness assessment failed for location_id=%s, pollutant=%s",
+            location_id,
+            pollutant
+        )
+
         raise HTTPException(
             status_code=500,
             detail="ML readiness assessment failed."
