@@ -2,6 +2,8 @@
 import sys
 from datetime import datetime, timezone
 
+from sqlalchemy import bindparam, text
+
 from backend.services.openaq_service import openaq_service
 from backend.database import get_connection
 
@@ -130,13 +132,13 @@ def get_existing_keys(sensor_ids):
     if not sensor_ids:
         return set()
 
-    placeholders = ",".join("?" for _ in sensor_ids)
-
-    query = f"""
+    query = text("""
         SELECT sensor_id, observed_at
         FROM air_quality_measurements
-        WHERE sensor_id IN ({placeholders})
-    """
+        WHERE sensor_id IN :sensor_ids
+    """).bindparams(
+        bindparam("sensor_ids", expanding=True)
+    )
 
     connection = get_connection()
 
@@ -144,8 +146,8 @@ def get_existing_keys(sensor_ids):
 
         rows = connection.execute(
             query,
-            tuple(sensor_ids)
-        ).fetchall()
+            {"sensor_ids": sensor_ids}
+        ).mappings().all()
 
         return {
             (row["sensor_id"], row["observed_at"])
@@ -162,12 +164,15 @@ def get_existing_keys(sensor_ids):
 
 def insert_new_records(records):
 
+    if not records:
+        return 0, 0
+
     retrieved_at = datetime.now(
         timezone.utc
     ).isoformat()
 
-    query = """
-        INSERT OR IGNORE INTO air_quality_measurements (
+    query = text("""
+        INSERT INTO air_quality_measurements (
             location_id,
             station_name,
             pollutant,
@@ -179,8 +184,20 @@ def insert_new_records(records):
             freshness,
             source
         )
-        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
-    """
+        VALUES (
+            :location_id,
+            :station_name,
+            :pollutant,
+            :sensor_id,
+            :value,
+            :unit,
+            :observed_at,
+            :retrieved_at,
+            :freshness,
+            :source
+        )
+        ON CONFLICT (sensor_id, observed_at) DO NOTHING
+    """)
 
     connection = get_connection()
 
@@ -189,27 +206,27 @@ def insert_new_records(records):
 
     try:
 
-        with connection:
+        with connection.begin():
 
             for record in records:
 
-                cursor = connection.execute(
+                result = connection.execute(
                     query,
-                    (
-                        LOCATION_ID,
-                        STATION_NAME,
-                        record["pollutant"],
-                        record["sensor_id"],
-                        record["value"],
-                        record["unit"],
-                        record["timestamp"],
-                        retrieved_at,
-                        None,
-                        SOURCE
-                    )
+                    {
+                        "location_id": LOCATION_ID,
+                        "station_name": STATION_NAME,
+                        "pollutant": record["pollutant"],
+                        "sensor_id": record["sensor_id"],
+                        "value": record["value"],
+                        "unit": record["unit"],
+                        "observed_at": record["timestamp"],
+                        "retrieved_at": retrieved_at,
+                        "freshness": None,
+                        "source": SOURCE
+                    }
                 )
 
-                if cursor.rowcount == 1:
+                if result.rowcount == 1:
                     inserted_count += 1
                 else:
                     ignored_count += 1
@@ -327,7 +344,7 @@ def run_ingestion(commit=False):
     print(f"Already in database: {already_exists}")
     print(f"New candidates: {len(new_records)}")
     print(f"Inserted: {inserted_count}")
-    print(f"Ignored by SQLite: {ignored_count}")
+    print(f"Ignored by database: {ignored_count}")
 
     if commit:
         print("\nDATABASE STATUS: COMMIT COMPLETED")

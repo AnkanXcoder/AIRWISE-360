@@ -4,6 +4,8 @@ import statistics
 from collections import Counter, defaultdict
 from datetime import datetime, timedelta, timezone
 
+from sqlalchemy import text
+
 from backend.services.openaq_service import openaq_service
 from backend.database import get_connection
 
@@ -126,12 +128,20 @@ def get_existing_keys():
 
     try:
 
-        rows = connection.execute("""
+        query = text("""
             SELECT sensor_id, observed_at
             FROM air_quality_measurements
-            WHERE location_id = ?
-            AND pollutant = ?
-        """, (LOCATION_ID, POLLUTANT)).fetchall()
+            WHERE location_id = :location_id
+            AND pollutant = :pollutant
+        """)
+
+        rows = connection.execute(
+            query,
+            {
+                "location_id": LOCATION_ID,
+                "pollutant": POLLUTANT
+            }
+        ).mappings().all()
 
         return {
             (row["sensor_id"], row["observed_at"])

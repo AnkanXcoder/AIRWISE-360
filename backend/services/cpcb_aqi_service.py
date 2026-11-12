@@ -284,13 +284,22 @@ def convert_to_cpcb_unit(value, unit, pollutant):
 # --------------------------------------------------
 
 def parse_timestamp(value):
+    """Parse an ISO-8601 timestamp safely; reject missing/invalid values."""
+    if value is None:
+        return None
+
     if isinstance(value, datetime):
         timestamp = value
     else:
-        timestamp = datetime.fromisoformat(
-            str(value).replace("Z", "+00:00")
-        )
+        value = str(value).strip()
+        if not value or value.lower() in {"none", "null", "nan"}:
+            return None
+        try:
+            timestamp = datetime.fromisoformat(value.replace("Z", "+00:00"))
+        except (TypeError, ValueError):
+            return None
 
+    # Naive timestamps are ambiguous. Do not silently assume a timezone.
     if timestamp.tzinfo is None:
         return None
 
@@ -327,9 +336,14 @@ def prepare_observations(records, now=None):
             rejected[pollutant] += 1
             continue
 
-        timestamp = parse_timestamp(
+        # Support the normalized API field and common database field names.
+        # The first non-empty field is used; missing timestamps are rejected.
+        timestamp_value = (
             record.get("timestamp")
+            or record.get("observed_at")
+            or record.get("datetime")
         )
+        timestamp = parse_timestamp(timestamp_value)
 
         if timestamp is None:
             rejected[pollutant] += 1

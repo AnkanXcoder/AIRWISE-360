@@ -1,5 +1,6 @@
 
 import pandas as pd
+from sqlalchemy import text
 
 from backend.database import get_connection
 
@@ -23,7 +24,7 @@ def load_dataset():
 
     try:
 
-        query = """
+        query = text("""
             SELECT
                 sensor_id,
                 pollutant,
@@ -31,16 +32,20 @@ def load_dataset():
                 unit,
                 observed_at
             FROM air_quality_measurements
-            WHERE location_id = ?
-            AND sensor_id = ?
-            AND pollutant = ?
+            WHERE location_id = :location_id
+            AND sensor_id = :sensor_id
+            AND pollutant = :pollutant
             ORDER BY observed_at
-        """
+        """)
 
         df = pd.read_sql_query(
             query,
             connection,
-            params=(LOCATION_ID, SENSOR_ID, POLLUTANT)
+            params={
+                "location_id": LOCATION_ID,
+                "sensor_id": SENSOR_ID,
+                "pollutant": POLLUTANT
+            }
         )
 
     finally:

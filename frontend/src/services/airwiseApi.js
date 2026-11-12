@@ -17,7 +17,7 @@ const api = axios.create({
 });
 
 // ------------------------------------
-// LIVE STATION DATA
+// LIVE STATION DATA (LEGACY)
 // ------------------------------------
 
 export const getStationMeasurements = async (stationId) => {
@@ -45,7 +45,8 @@ export const collectStationData = async (stationId) => {
 };
 
 // ------------------------------------
-// HISTORICAL DATA
+// HISTORICAL DATA (LEGACY)
+// Keep until dependent components migrate.
 // ------------------------------------
 
 export const getStationHistory = async (
@@ -110,6 +111,9 @@ export const getIndiaMap = async (limit = 1000) => {
   return data;
 };
 
+// ------------------------------------
+// INDIA STATION LIVE MEASUREMENTS
+// ------------------------------------
 
 export const getIndiaStationMeasurements = async (
   source,
@@ -122,6 +126,40 @@ export const getIndiaStationMeasurements = async (
   return data;
 };
 
+// ------------------------------------
+// INDIA STATION HISTORICAL INGESTION
+// ------------------------------------
+
+export const ingestIndiaStationHistory = async (
+  source,
+  sourceLocationId,
+  hours = 36
+) => {
+  const { data } = await api.post(
+    `/api/india/stations/${encodeURIComponent(source)}/${sourceLocationId}/ingest`,
+    null,
+    {
+      params: { hours },
+    }
+  );
+
+  return data;
+};
+
+// ------------------------------------
+// INDIA STATION CPCB-METHODOLOGY AQI
+// ------------------------------------
+
+export const getIndiaStationAqi = async (
+  source,
+  sourceLocationId
+) => {
+  const { data } = await api.get(
+    `/api/india/stations/${encodeURIComponent(source)}/${sourceLocationId}/aqi`
+  );
+
+  return data;
+};
 
 // ------------------------------------
 // CITY COMPARISON
@@ -176,7 +214,7 @@ export const getHealthGuidance = async ({
 };
 
 // ------------------------------------
-// SPIKE DETECTION
+// SPIKE DETECTION (LEGACY)
 // ------------------------------------
 
 export const getSpikeAnalysis = async (
@@ -195,7 +233,7 @@ export const getSpikeAnalysis = async (
 };
 
 // ------------------------------------
-// FLATLINE DETECTION
+// FLATLINE DETECTION (LEGACY)
 // ------------------------------------
 
 export const getFlatlineAnalysis = async (
@@ -214,7 +252,7 @@ export const getFlatlineAnalysis = async (
 };
 
 // ------------------------------------
-// POLLUTION EVENT INTELLIGENCE
+// POLLUTION EVENT INTELLIGENCE (LEGACY)
 // ------------------------------------
 
 export const getPollutionEvents = async (
@@ -274,7 +312,6 @@ export const getMLReadiness = async (
   return data;
 };
 
-
 // ------------------------------------
 // ML DATASET HEALTH
 // ------------------------------------
@@ -286,7 +323,6 @@ export const getDatasetHealth = async (stationId) => {
 
   return data;
 };
-
 
 // ------------------------------------
 // API STATUS
